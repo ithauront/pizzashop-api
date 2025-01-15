@@ -15,6 +15,13 @@
       "when": 1736941126414,
       "tag": "0001_adorable_groot",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1736946593239,
+      "tag": "0002_funny_cable",
+      "breakpoints": true
     }
   ]
 }
