@@ -1,9 +1,10 @@
-import Elysia, { t } from 'elysia'
+import Elysia, { NotFoundError, t } from 'elysia'
 import { db } from '../../db/connection'
 import dayjs from 'dayjs'
 import { auth } from '../auth'
 import { authLinks } from '../../db/schema'
 import { eq } from 'drizzle-orm'
+import { UnauthorizedError } from '../errors/unauthorized-error'
 
 export const authenticateFromLink = new Elysia().use(auth).get(
   '/auth-links/authenticate',
@@ -16,7 +17,7 @@ export const authenticateFromLink = new Elysia().use(auth).get(
       },
     })
     if (!authLinkFromCode) {
-      throw new Error('Auth link not found.')
+      throw new NotFoundError('Auth link not found.')
     }
 
     const daysSinceAuthLikWasCreated = dayjs().diff(
@@ -25,7 +26,7 @@ export const authenticateFromLink = new Elysia().use(auth).get(
     )
 
     if (daysSinceAuthLikWasCreated > 7) {
-      throw new Error('Auth link expired, please generate a new one')
+      throw new UnauthorizedError('The token has expired')
     }
 
     const managedRestaurant = await db.query.restaurants.findFirst({
