@@ -54,7 +54,7 @@ export const auth = new Elysia()
 
         return {
           userId: payload.sub,
-          restautantId: payload.restaurantId,
+          restaurantId: payload.restaurantId,
         }
       },
     }

@@ -6,15 +6,15 @@ import { UnauthorizedError } from '../errors/unauthorized-error'
 export const getManagedRestaurant = new Elysia()
   .use(auth)
   .get('/managed-restaurant', async ({ getCurrentUser }) => {
-    const { restautantId } = await getCurrentUser()
+    const { restaurantId } = await getCurrentUser()
 
-    if (!restautantId) {
+    if (!restaurantId) {
       throw new UnauthorizedError('User is not a manager.')
     }
 
     const managedRestaurant = await db.query.restaurants.findFirst({
       where(fields, { eq }) {
-        return eq(fields.id, restautantId)
+        return eq(fields.id, restaurantId)
       },
     })
 
