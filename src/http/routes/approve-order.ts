@@ -9,15 +9,18 @@ export const approveOrder = new Elysia().use(auth).patch(
   '/orders/:orderId/approve',
   async ({ getCurrentUser, set, params }) => {
     const { orderId } = params
-    const restaurantId = await getCurrentUser()
+    const { restaurantId } = await getCurrentUser()
 
     if (!restaurantId) {
       throw new UnauthorizedError()
     }
 
     const order = await db.query.orders.findFirst({
-      where(fields, { eq }) {
-        return eq(fields.id, orderId)
+      where(fields, { eq, and }) {
+        return and(
+          eq(fields.id, orderId),
+          eq(fields.restaurantId, restaurantId),
+        )
       },
     })
 

@@ -2,7 +2,6 @@ import Elysia, { t } from 'elysia'
 import { auth } from '../auth'
 import { db } from '../../db/connection'
 import { UnauthorizedError } from '../errors/unauthorized-error'
-import { createSelectSchema } from 'drizzle-typebox'
 import { orders, users } from '../../db/schema'
 import { and, count, desc, eq, ilike, sql } from 'drizzle-orm'
 
@@ -72,7 +71,15 @@ export const getOrders = new Elysia().use(auth).get(
     query: t.Object({
       customerName: t.Optional(t.String()),
       orderId: t.Optional(t.String()),
-      status: t.Optional(createSelectSchema(orders).properties.status),
+      status: t.Optional(
+        t.Union([
+          t.Literal('pending'),
+          t.Literal('processing'),
+          t.Literal('delivering'),
+          t.Literal('delivered'),
+          t.Literal('canceled'),
+        ]),
+      ),
       pageIndex: t.Numeric({ minimum: 0 }),
     }),
   },
