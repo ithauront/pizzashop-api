@@ -67,7 +67,7 @@ const [restaurant] = await db
       managerId: manager.id,
     },
   ])
-  .returning()
+  .returning({ id: restaurants.id })
 
 console.log(chalk.yellow('✔️ Created restaurant!'))
 
@@ -102,7 +102,7 @@ type OrderInsertType = typeof orders.$inferInsert
 const orderItemsToInsert: OrderItemInsertType[] = []
 const ordersToInsert: OrderInsertType[] = []
 
-for (let i = 0; i < 200; i++) {
+for (let i = 0; i < 20; i++) {
   const orderId = createId()
   const orderProducts = faker.helpers.arrayElements(availableProducts, {
     min: 1,
@@ -136,11 +136,13 @@ for (let i = 0; i < 200; i++) {
     createdAt: faker.date.recent({ days: 40 }),
   })
 }
-
-await db.insert(orders).values(ordersToInsert)
-await db.insert(orderItems).values(orderItemsToInsert)
-
-console.log(chalk.yellow('✔️ Created orders!'))
+try {
+  await db.insert(orders).values(ordersToInsert)
+  await db.insert(orderItems).values(orderItemsToInsert)
+  console.log(chalk.yellow('✔️ Created orders!'))
+} catch (err) {
+  console.error(chalk.red('❌ Failed to insert orders'), err)
+}
 
 console.log(chalk.greenBright('🌱 Database seeded successfully!'))
 
