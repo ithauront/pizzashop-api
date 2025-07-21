@@ -10,7 +10,6 @@ export const sendAuthLink = new Elysia().post(
   '/authenticate',
   async ({ body }) => {
     const { email } = body
-
     const userFromEmail = await db.query.users.findFirst({
       where(fields, { eq }) {
         return eq(fields.email, email)
@@ -36,7 +35,7 @@ export const sendAuthLink = new Elysia().post(
     const info = await mail.sendMail({
       from: {
         name: 'Pizzashop',
-        address: 'hi@pizzashop.com',
+        address: 'iurithauront@gmail.com',
       },
       to: {
         name: userFromEmail.name,

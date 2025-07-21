@@ -16,8 +16,15 @@ import { getMonthOrdersAmount } from './routes/get-month-orders-amount'
 import { getMonthCanceledOrdersAmount } from './routes/get-month-canceled-orders-amount'
 import { getPopularProducts } from './routes/get-popular-products'
 import { getDailyReceiptInPeriod } from './routes/get-daily-receipt-in-period'
+import cors from '@elysiajs/cors'
 
 const app = new Elysia()
+  .use(
+    cors({
+      origin: 'http://localhost:5173',
+      credentials: true,
+    }),
+  )
   .use(registerRestaurant)
   .use(sendAuthLink)
   .use(authenticateFromLink)
